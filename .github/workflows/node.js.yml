@@ -10,32 +10,29 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+ build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+        - uses: actions/checkout@v2
+        - name: Use Node.js
+          uses: actions/setup-node@v2
+          with:
+            node-version: '18.x'
+        - name: Install dependencies
+          run: npm install
+        - name: Run test
+          run: npm test
+        - name: Check Job Status status and fail if they are red
+          if: env.WORKFLOW_CONCLUSION == 'failure'
+          run: exit 1
+          
+ deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    
-  deploy:
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.14 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "appnodedeploy2" #Must be unique in Heroku
-          heroku_email: "igna7_17@hotmail.com"
+             heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+             heroku_app_name: 'appnodedeploy2'
+             heroku_email: "igna7_17@hotmail.com"
