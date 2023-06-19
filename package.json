@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app",
-    "test": "jest app.test.js --forceExit"
+    "test": "jest app.spec.js --forceExit"
   },
   "keywords": [],
   "author": "",
