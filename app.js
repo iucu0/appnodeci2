@@ -11,6 +11,7 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
+    console.log('Solo uso esta línea para enviar un push y probar si funciona')
 })
 
 module.exports = app;
